@@ -28,7 +28,7 @@ def translate():
 def translate_file():
     with open('input.txt', 'r') as f:
         text = f.read()
-    result = nmt_model.translate(source_text=text, source_lang="hi", target_lang="en")
+    result = nmt_model.translate(text, source_lang="hi", target_lang="en")
     return jsonify(result)
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5007)
