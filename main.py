@@ -5,8 +5,6 @@ import nemo.collections.nlp as nemo_nlp
 nmt_model = nemo_nlp.models.machine_translation.MTEncDecModel.from_pretrained(model_name="nmt_hi_en_transformer12x2")
 
 
-
-
 app = Flask(__name__)
 
 
@@ -42,7 +40,7 @@ def translate():
             item = " ".join(item)
             f.write("%s\n" % item)
 
-    return jsonify(response)
+    return jsonify(response), 200
 
 @app.route('/translate_file', methods=['GET'])
 def translate_file():
@@ -60,7 +58,8 @@ def translate_file():
             f.write("%s\n" % item)
 
 
-    return jsonify("Translation Saved in output.txt")
+    return jsonify({"message":"Translation Saved in output.txt"}),200
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5007)
 
