@@ -4,11 +4,15 @@ import nemo
 import nemo.collections.nlp as nemo_nlp
 nmt_model = nemo_nlp.models.machine_translation.MTEncDecModel.from_pretrained(model_name="nmt_hi_en_transformer12x2")
 
-nmt_model.translate(source_text="आप कैसे हैं?", source_lang="hi", target_lang="en")
 
 
 
 app = Flask(__name__)
+
+
+@app.route('/api_test', methods=['GET'])
+def api_test():
+    return jsonify({'message': 'NMT Hindi To English is working'})
 
 
 @app.route('/translate', methods=['POST'])  
@@ -26,7 +30,7 @@ def translate():
 
 @app.route('/translate_file', methods=['GET'])
 def translate_file():
-    with open('input.txt', 'r') as f:
+    with open('input.txt', 'rb') as f:
         text = f.read()
     result = nmt_model.translate(text, source_lang="hi", target_lang="en")
     return jsonify(result)
