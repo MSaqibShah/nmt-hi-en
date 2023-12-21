@@ -26,18 +26,30 @@ def translate():
     if not text:
         return jsonify({'message': 'No text provided'}), 400  
 
+    if type(text) != list:
+        return jsonify({'message': 'Text should be a list'}), 400
+    
+    if len(text) > 1000:
+        return jsonify({'message': 'Text too long'}), 400
 
-    result = nmt_model.translate(source_text=text, source_lang="hi", target_lang="en")
-    return jsonify(result)
+    response = []
+    for line in text:
+        result = nmt_model.translate(line, source_lang="hi", target_lang="en")
+        response.append(result)
+
+    return jsonify(response)
 
 @app.route('/translate_file', methods=['GET'])
 def translate_file():
     with open('input.txt', 'r',encoding='utf-8') as f:
-        text = f.read()
+        text = f.readlines()
 
-    print(text)
-    result = nmt_model.translate(text, source_lang="hi", target_lang="en")
-    # return jsonify(text)
+    responese = []
+    for line in text:
+        result = nmt_model.translate(line, source_lang="hi", target_lang="en")
+        responese.append(result)
+        
+    return jsonify(responese)
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5007)
 
