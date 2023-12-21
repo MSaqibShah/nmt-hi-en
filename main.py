@@ -24,16 +24,20 @@ def translate():
     text = data['text']
 
     if not text:
-        return jsonify({'message': 'No text provided'}), 400    
+        return jsonify({'message': 'No text provided'}), 400  
+
+
     result = nmt_model.translate(source_text=text, source_lang="hi", target_lang="en")
     return jsonify(result)
 
 @app.route('/translate_file', methods=['GET'])
 def translate_file():
-    with open('input.txt', 'rb') as f:
+    with open('input.txt', 'r',encoding='utf-8') as f:
         text = f.read()
+
+    print(text)
     result = nmt_model.translate(text, source_lang="hi", target_lang="en")
-    return jsonify(result)
+    # return jsonify(text)
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5007)
 
