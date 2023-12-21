@@ -10,7 +10,7 @@ nmt_model = nemo_nlp.models.machine_translation.MTEncDecModel.from_pretrained(mo
 app = Flask(__name__)
 
 
-@app.route('/api_test', methods=['GET'])
+@app.route('/api_status', methods=['GET'])
 def api_test():
     return jsonify({'message': 'NMT Hindi To English is working'})
 
@@ -37,6 +37,11 @@ def translate():
         result = nmt_model.translate(line, source_lang="hi", target_lang="en")
         response.append(result)
 
+    with open('output.txt', 'w',encoding='utf-8') as f:
+        for item in response:
+            item = " ".join(item)
+            f.write("%s\n" % item)
+
     return jsonify(response)
 
 @app.route('/translate_file', methods=['GET'])
@@ -44,12 +49,18 @@ def translate_file():
     with open('input.txt', 'r',encoding='utf-8') as f:
         text = f.readlines()
 
-    responese = []
+    response = []
     for line in text:
         result = nmt_model.translate(line, source_lang="hi", target_lang="en")
-        responese.append(result)
+        response.append(result)
         
-    return jsonify(responese)
+    with open('output.txt', 'w',encoding='utf-8') as f:
+        for item in response:
+            item = " ".join(item)
+            f.write("%s\n" % item)
+
+
+    return jsonify("Translation Saved in output.txt")
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5007)
 
